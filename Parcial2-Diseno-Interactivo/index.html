@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dragon Ball Explorer</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Dragon Ball Explorer</h1>
+        <p>Busca información de tus personajes favoritos</p>
+    </header>
+
+    <main>
+
+        <section class="buscador">
+
+            <h2>Buscar personaje</h2>
+
+            <input 
+                type="text" 
+                id="nombrePersonaje"
+                placeholder="Ejemplo: Goku"
+            >
+
+            <button onclick="buscarPersonaje()">
+                BUSCAR
+            </button>
+
+        </section>
+
+        <p id="mensaje"></p>
+
+        <section id="resultado">
+
+            <div class="tarjeta">
+
+                <img src="goku.jpg" alt="Goku">
+
+                <div class="informacion">
+
+                    <h2>Dragon Ball Explorer</h2>
+
+                    <p>
+                        Escribe el nombre de un personaje
+                        para comenzar.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Parcial 2 - Diseño Interactivo 3 - Alejandro Mendez</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
