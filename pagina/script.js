@@ -3,41 +3,62 @@ async function buscarPersonaje() {
     let nombre = document.getElementById("nombrePersonaje").value.trim();
 
     let mensaje = document.getElementById("mensaje");
+
     let resultado = document.getElementById("resultado");
 
+
+    // verificar que el usuario haya escrito algo
     if (nombre === "") {
-        mensaje.textContent = "Escribe el nombre de un personaje.";
+
+        mensaje.textContent =
+            "Escribe el nombre de un personaje.";
+
+        resultado.innerHTML = "";
+
         return;
+
     }
+
 
     mensaje.textContent = "Buscando personaje...";
 
+
     try {
 
+        // pedir los personajes a nuestra API
         let respuesta = await fetch(
             "http://localhost:3000/api/personajes"
         );
 
+
         let datos = await respuesta.json();
+
 
         console.log(datos);
 
+
+        // buscar el personaje escrito
         let personaje = datos.find(function(personaje) {
 
-            return personaje.nombre.toLowerCase() === nombre.toLowerCase();
+            return personaje.nombre.toLowerCase() ===
+                   nombre.toLowerCase();
 
         });
 
+
+        // si encontramos el personaje
         if (personaje) {
 
-            mensaje.textContent = "¡Personaje encontrado!";
+            mensaje.textContent =
+                "¡Personaje encontrado!";
+
 
             resultado.innerHTML = `
 
                 <div class="tarjeta">
 
-                    <img 
-                        src="${personaje.imagen}" 
+                    <img
+                        src="${personaje.imagen}"
                         alt="${personaje.nombre}"
                     >
 
@@ -61,8 +82,18 @@ async function buscarPersonaje() {
                         </p>
 
                         <p>
+                            <strong>Ki maximo:</strong>
+                            ${personaje.kiMaximo}
+                        </p>
+
+                        <p>
                             <strong>Afiliacion:</strong>
                             ${personaje.afiliacion}
+                        </p>
+
+                        <p>
+                            <strong>Descripcion:</strong>
+                            ${personaje.descripcion}
                         </p>
 
                     </div>
@@ -90,4 +121,5 @@ async function buscarPersonaje() {
         resultado.innerHTML = "";
 
     }
+
 }

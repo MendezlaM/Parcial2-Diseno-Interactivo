@@ -8,98 +8,130 @@ app.use(express.json());
 
 const PORT = 3000;
 
-const personajes = [
 
-    {
-        id: 1,
-        name: "Goku",
-        ki: "60.000.000",
-        maxKi: "90 Septillion",
-        race: "Saiyan",
-        gender: "Male",
-        description: "El protagonista de Dragon Ball.",
-        image: "https://dragonball-api.com/characters/goku_normal.webp",
-        affiliation: "Z Fighter"
-    },
+// ruta para obtener todos los personajes
+app.get("/api/personajes", async (req, res) => {
 
-    {
-        id: 2,
-        name: "Vegeta",
-        ki: "54.000.000",
-        maxKi: "19.84 Septillion",
-        race: "Saiyan",
-        gender: "Male",
-        description: "El principe de los Saiyans.",
-        image: "https://dragonball-api.com/characters/vegeta_normal.webp",
-        affiliation: "Z Fighter"
-    },
+    try {
 
-    {
-        id: 3,
-        name: "Piccolo",
-        ki: "2.000.000",
-        maxKi: "500.000.000",
-        race: "Namekian",
-        gender: "Male",
-        description: "Guerrero Namekiano y miembro de los Guerreros Z.",
-        image: "https://dragonball-api.com/characters/picolo_normal.webp",
-        affiliation: "Z Fighter"
-    },
+        // conectamos con la API oficial de Dragon Ball
+        const respuesta = await fetch(
+            "https://dragonball-api.com/api/characters?limit=100"
+        );
 
-    {
-        id: 4,
-        name: "Gohan",
-        ki: "45.000.000",
-        maxKi: "40 septillion",
-        race: "Saiyan",
-        gender: "Male",
-        description: "Hijo de Goku y uno de los guerreros más importantes.",
-        image: "https://dragonball-api.com/characters/gohan.webp",
-        affiliation: "Z Fighter"
-    },
+        const datos = await respuesta.json();
 
-    {
-        id: 5,
-        name: "Bulma",
-        ki: "0",
-        maxKi: "0",
-        race: "Human",
-        gender: "Female",
-        description: "Una de las mejores amigas de Goku.",
-        image: "https://dragonball-api.com/characters/bulma.webp",
-        affiliation: "Z Fighter"
-    }
+        // convertimos los datos a español
+        const personajes = datos.items.map(function(personaje) {
 
-];
+            return {
 
-app.get("/api/personajes", (req, res) => {
+                id: personaje.id,
 
-    res.json(personajes);
+                nombre: personaje.name,
 
-});
+                ki: personaje.ki,
 
-app.get("/api/personajes/:id", (req, res) => {
+                kiMaximo: personaje.maxKi,
 
-    const id = parseInt(req.params.id);
+                raza: personaje.race,
 
-    const personaje = personajes.find(
-        p => p.id === id
-    );
+                genero: personaje.gender,
 
-    if (!personaje) {
+                descripcion: personaje.description,
 
-        return res.status(404).json({
-            mensaje: "Personaje no encontrado"
+                imagen: personaje.image,
+
+                afiliacion: personaje.affiliation
+
+            };
+
+        });
+
+        res.json(personajes);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            mensaje: "No se pudieron obtener los personajes."
+
         });
 
     }
 
-    res.json(personaje);
+});
+
+
+// ruta para buscar un personaje por ID
+app.get("/api/personajes/:id", async (req, res) => {
+
+    try {
+
+        const id = req.params.id;
+
+        const respuesta = await fetch(
+            `https://dragonball-api.com/api/characters/${id}`
+        );
+
+        if (!respuesta.ok) {
+
+            return res.status(404).json({
+
+                mensaje: "Personaje no encontrado."
+
+            });
+
+        }
+
+        const personaje = await respuesta.json();
+
+        const resultado = {
+
+            id: personaje.id,
+
+            nombre: personaje.name,
+
+            ki: personaje.ki,
+
+            kiMaximo: personaje.maxKi,
+
+            raza: personaje.race,
+
+            genero: personaje.gender,
+
+            descripcion: personaje.description,
+
+            imagen: personaje.image,
+
+            afiliacion: personaje.affiliation
+
+        };
+
+        res.json(resultado);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            mensaje: "Error al buscar el personaje."
+
+        });
+
+    }
 
 });
 
+
+// iniciar servidor
 app.listen(PORT, () => {
 
-    console.log(`API funcionando en http://localhost:${PORT}`);
+    console.log(
+        `API funcionando en http://localhost:${PORT}`
+    );
 
 });
